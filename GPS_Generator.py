@@ -127,14 +127,36 @@ class Simulator():
         # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
         worker1 = Worker(1, GPS(-122.398314, 37.7747)) # Initial Position set to be our office.
         self.workerLists += [worker1]
-        for i in range(0, 1000):
+        for i in range(0, 1000): # Within 1000 seconds
             for worker in self.workerLists:
                 worker.velocity = np.array((random.uniform(-2.5, 2.5), random.uniform(-2.5, 2.5)))
                 self.update(timeIncrement)
 
+    def SimMultipleMoveRandomly(self, numWorker = 1):
+        """
+        Simulate a worker walking around with random velocity. Maganitude range from
+        0 - 2.5 m/s. 
+        """
+        # Can simulate mutiple worker walking around. 
+        timeIncrement = timedelta(seconds = 1) 
+        # Hard coding timeIncrement for 1 second, but can be smaller transmission.
+        for i in range(1, numWorker + 1):
+            worker = Worker(i, GPS(-122.398314, 37.7747)) # Initial Position set to be our office.
+            self.workerLists += [worker]
+        for i in range(0, 28800): # Within 8 hrs
+            for worker in self.workerLists:
+                worker.velocity = np.array((random.uniform(-2.5, 2.5), random.uniform(-2.5, 2.5)))
+                self.update(timeIncrement)
     def result(self):
         return self.data
 
-sim = Simulator()
-sim.SimSingleMoveRandomly()
-print(sim.result())
+# Tests of SimSingleMoveRandomly()
+# sim1 = Simulator()
+# sim1.SimSingleMoveRandomly()
+# print(sim1.result())
+
+# Tests of SimMultipleMoveRandomly()
+# Three workers around SF office for 8 hrs.
+sim2 = Simulator()
+sim2.SimMultipleMoveRandomly(3)
+print(sim2.result())
