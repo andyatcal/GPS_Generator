@@ -33,25 +33,25 @@ sfmap = pyproj.Proj("+init=EPSG:6419")
 # print(x, y)
 # print(w, k)
 
-# A class of GPS data. There are two parameters: longtitude
+# A class of GPS data. There are two parameters: longitude
 # and latitude.
 class GPS():
-    def __init__(self, longtitude = 0.0, latitude = 0.0):
-        assert (longtitude <= 180) & (longtitude >= -180) \
+    def __init__(self, longitude = 0.0, latitude = 0.0):
+        assert (longitude <= 180) & (longitude >= -180) \
          & (latitude >= -90) & (latitude <=90)
-        self.longtitude = longtitude
+        self.longitude = longitude
         self.latitude = latitude
 
-    def setGPS(self, longtitude, latitude):
+    def setGPS(self, longitude, latitude):
         """
-        Set the longtitude and latitude
+        Set the longitude and latitude
         """
-        self.longtitude = longtitude
+        self.longitude = longitude
         self.latitude = latitude
 
     def getGPS(self):
         """
-        Get the longtitude and latitude data
+        Get the longitude and latitude data
 
         >>> gps1 = GPS()
         >>> gps1.getGPS()
@@ -60,7 +60,7 @@ class GPS():
         >>> gps2.getGPS()
         (-122.398314, 37.7747)
         """
-        return self.longtitude, self.latitude
+        return self.longitude, self.latitude
 
 # Worker class contains everything associated with a worker,
 # including the ID, last updated location, and others?(active state).
@@ -80,8 +80,8 @@ class Worker():
     def getGPS(self):
         return self.gps.getGPS()
 
-    def setGPS(self, longtitude, latitude):
-        self.gps.setGPS(longtitude, latitude)
+    def setGPS(self, longitude, latitude):
+        self.gps.setGPS(longitude, latitude)
 
     def info(self):
         """
@@ -90,11 +90,11 @@ class Worker():
         >>> worker1.info()
         [1, 37.7747, -122.398314]
         """
-        return [self.workerID, self.gps.latitude, self.gps.longtitude]
+        return [self.workerID, self.gps.latitude, self.gps.longitude]
 
 
 # Simulator for the motion of worker, generate a list in the form of 
-# [[workerID, latitude, longtitude, lastUpdateTime, geoFenceID], ...]
+# [[workerID, latitude, longitude, lastUpdateTime, geoFenceID], ...]
 class Simulator():
     def __init__(self):
         self.data = [] # This is the data we want in the end
@@ -123,7 +123,8 @@ class Simulator():
         0 - 2.5 m/s. 
         """
         # Can simulate mutiple worker walking around. 
-        timeIncrement = timedelta(seconds = 1) # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
+        timeIncrement = timedelta(seconds = 1) 
+        # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
         worker1 = Worker(1, GPS(-122.398314, 37.7747)) # Initial Position set to be our office.
         self.workerLists += [worker1]
         for i in range(0, 1000):
