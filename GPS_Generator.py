@@ -119,15 +119,15 @@ class Simulator():
     def SimSingleMoveRandomly(self):
         """
         Simulate a worker walking around with random velocity. Maganitude range from
-        0 - 2.5 m/s
+        0 - 2.5 m/s. 
         """
         # Can simulate mutiple worker walking around. 
         timeIncrement = 1 # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
-        worker1 = Worker(1, GPS(-122.398314, 37.7747))
+        worker1 = Worker(1, GPS(-122.398314, 37.7747)) # Initial Position set to be our office.
         self.workerLists += [worker1]
         while self.time < 1000:
             for worker in self.workerLists:
-                worker.velocity = np.array((random.uniform(-20000, 20000), random.uniform(-2.5, 2.5)))
+                worker.velocity = np.array((random.uniform(-2.5, 2.5), random.uniform(-2.5, 2.5)))
                 self.update(timeIncrement)
 
     def result(self):
