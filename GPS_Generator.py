@@ -1,11 +1,11 @@
-# Copyright reserved 2015 Yu Wang (SID: 24106507) from UC Berkeley.
+# Yu Wang (SID: 24106507) from UC Berkeley.
 # Need to use pyproj package. Run sudo pip install pyproj in the console.
 import pyproj
 # import LatLon # maybe use in the future
 
 # Date and time
 import time
-import datetime
+from datetime import datetime, timedelta
 
 # Vectors for motion
 import numpy as np
@@ -98,7 +98,8 @@ class Worker():
 class Simulator():
     def __init__(self):
         self.data = [] # This is the data we want in the end
-        self.time = 0 # Hard coding with 0, will change to Datatime later
+        now = datetime(2015, 2, 22, 20, 53, 10)
+        self.time =  now.now() # Starting with current time
         self.workerLists = [] # The worker lists we have in this simulation
         self.mapConvert = sfmap # Hard coding with sfmap, will change later
 
@@ -109,7 +110,7 @@ class Simulator():
         for worker in self.workerLists:
             lon, lat = worker.getGPS()
             position = np.array(self.mapConvert(lon, lat)) # Can be improved
-            position += worker.velocity * timeIncrement
+            position += worker.velocity * (timeIncrement.total_seconds())
             lon, lat = self.mapConvert(position[0], position[1], inverse = True)
             worker.setGPS(lon, lat)
             newEntry = worker.info() + [self.time] + [1] # Geofence hardcoded as 1
@@ -122,10 +123,10 @@ class Simulator():
         0 - 2.5 m/s. 
         """
         # Can simulate mutiple worker walking around. 
-        timeIncrement = 1 # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
+        timeIncrement = timedelta(seconds = 1) # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
         worker1 = Worker(1, GPS(-122.398314, 37.7747)) # Initial Position set to be our office.
         self.workerLists += [worker1]
-        while self.time < 1000:
+        for i in range(0, 1000):
             for worker in self.workerLists:
                 worker.velocity = np.array((random.uniform(-2.5, 2.5), random.uniform(-2.5, 2.5)))
                 self.update(timeIncrement)
