@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Andy's Learning Google Map API</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <style type="text/css">
       html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
     </style>
     <script type="text/javascript"
+      /* Should sign_in=true or use the key=APIKEY. */
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1edrAnbc7z0-SoDPYpYWdTJHhFPrEe4I">
     </script>
     <script type="text/javascript">
@@ -19,12 +22,13 @@
       function loadScript() {
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp' +
+        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.19' +
             '&signed_in=true&callback=initialize';
         document.body.appendChild(script);
       }
 
-      window.onload = loadScript;
+      //window.onload = loadScript; //For alternative of the following event
+      google.maps.event.addDomListener(window, 'load', loadScript);
 
     </script>
   </head>
