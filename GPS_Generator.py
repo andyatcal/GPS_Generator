@@ -171,7 +171,7 @@ class Simulator():
 server = "rhumbix-data.com"
 db = "rhumbix_foreman"
 user = "rhumbix_foreman_app_user"
-pw = "1qaz@WSX3e" # < you should have this from the postit
+pw = "" # < you should have this from the postit
 table = "Temp_UserLocation"
 
 sim = Simulator()
