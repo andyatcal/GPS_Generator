@@ -1,23 +1,46 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Andy's Learning Google Map API</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style type="text/css">
-      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+    <title>Markers</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      #panel {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        margin-left: -180px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+      }
     </style>
-    <script type="text/javascript"
-      /* Should sign_in=true or use the key=APIKEY. */
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1edrAnbc7z0-SoDPYpYWdTJHhFPrEe4I">
-    </script>
-    <script type="text/javascript">
-
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.17&signed_in=true"></script>
+    <script>
+// In the following example, markers appear when the user clicks on the map.
+// The markers are stored in an array.
+// The user can then click an option to hide, show or delete the markers.
+var map;
 var markers = [];
-
+var sim1 = [
+new google.maps.LatLng(37.7750446685, -122.397897039),
+new google.maps.LatLng(37.7753893355, -122.397480075),
+new google.maps.LatLng(37.775734001, -122.397063106),
+new google.maps.LatLng(37.776078665, -122.396646134),
+new google.maps.LatLng(37.7764233275, -122.396229158),
+new google.maps.LatLng(37.7767679885, -122.395812178),
+new google.maps.LatLng(37.777112648, -122.395395194),
+new google.maps.LatLng(37.777457306, -122.394978206),
+new google.maps.LatLng(37.7778019626, -122.394561214),
+new google.maps.LatLng(37.7781466176, -122.394144219),
+]
+var image = 'images/Smiley_Face.png';
+var sfoffice = new google.maps.LatLng(37.7747, -122.398314);
 function initialize() {
-  var sfoffice = new google.maps.LatLng(37.7747, -122.398314);
-  // Create an array of styles.
   var styles = [
     {
       stylers: [
@@ -39,59 +62,56 @@ function initialize() {
       ]
     }
   ];
-
-  // Create a new StyledMapType object, passing it the array of styles,
-  // as well as the name to be displayed on the map type control.
   var styledMap = new google.maps.StyledMapType(styles,
     {name: "Styled Map"});
-
-  // Create a map object, and include the MapTypeId to add
-  // to the map type control.
   var mapOptions = {
-    zoom: 17,
+    zoom: 18,
     center: sfoffice,
     mapTypeControlOptions: {
       mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
     },
-
   };
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-    mapOptions);
-
-  //Associate the styled map with the MapTypeId and set it to display.
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
   map.mapTypes.set('map_style', styledMap);
   map.setMapTypeId('map_style');
-  
-  google.maps.event.addListener(map, 'click', function(event) {
-    addMarker(event.latLng);
-  });
 }
+//count the number 
+var count;
+function animation() {
+  count = 0;
+  for (var i = 0; i < nodes.length; i++) {
+    window.setTimeout(function() {
+      addMarker(nodes[count]);
+      count += 1;
+    }, i * 1000);
+  }
+}
+//marker1.setMap(map);
 
 // Add a marker to the map and push to the array.
 function addMarker(location) {
   var marker = new google.maps.Marker({
     position: location,
-    map: map
+    map: map,
+    animation: google.maps.Animation.DROP,
   });
   markers.push(marker);
 }
 
+google.maps.event.addDomListener(window, 'load', initialize);
 
-      function loadScript() {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.19' +
-            '&signed_in=true&callback=initialize&libraries=places';
-        document.body.appendChild(script);
-      }
-
-      //window.onload = loadScript; //For alternative of the following event
-      google.maps.event.addDomListener(window, 'load', loadScript);
-
+var marker1 = new google.maps.Marker({
+    position: sfoffice,
+    map: map,
+  });
     </script>
   </head>
   <body>
-<div id="map-canvas"></div>
-
+    <div id="panel">
+      <button onclick="animation()">Animation</button>
+    </div>
+    <div id="map-canvas"></div>
+    <p>Click on the map to add markers.</p>
   </body>
 </html>
