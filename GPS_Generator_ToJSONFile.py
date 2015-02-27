@@ -14,7 +14,7 @@ import numpy as np
 import random
 
 # Write the data to the remote database with pymssql
-import pymssql
+import json
 
 # Global projection of gps data on x, y coordiante systems (units of meters) of pyproj
 # Two examples given in http://all-geo.org/volcan01010/2012/11/change-coordinates-with-pyproj/
@@ -102,7 +102,7 @@ class Simulator():
     def __init__(self):
         self.data = [] # This is the data we want in the end
         now = datetime(2015, 2, 22, 20, 53, 10)
-        self.time =  now.now() # Starting with current time
+        self.time = now.now() # Starting with current time
         self.workerLists = [] # The worker lists we have in this simulation
         self.mapConvert = sfmap # Hard coding with sfmap, will change later
 
@@ -111,8 +111,8 @@ class Simulator():
         Update time, position, velocity for one unit of time.
         """
         for worker in self.workerLists:
-            worker.velocity = np.array((random.uniform(2.5, 2.5),\
-             random.uniform(2.5, 2.5)))
+            worker.velocity = np.array((random.uniform(-2.5, 2.5),\
+             random.uniform(-2.5, 2.5)))
             lon, lat = worker.getGPS()
             position = np.array(self.mapConvert(lon, lat)) # Can be improved
             position += worker.velocity * (timeIncrement.total_seconds())
