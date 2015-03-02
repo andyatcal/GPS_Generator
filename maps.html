@@ -19,7 +19,7 @@
         border: 1px solid #999;
       }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.17&signed_in=true"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
     <script>
 // In the following example, markers appear when the user clicks on the map.
 // The markers are stored in an array.
@@ -38,7 +38,13 @@ new google.maps.LatLng(37.777457306, -122.394978206),
 new google.maps.LatLng(37.7778019626, -122.394561214),
 new google.maps.LatLng(37.7781466176, -122.394144219),
 ]
-var image = 'images/Smiley_Face.png';
+var nodes1 = [
+new google.maps.LatLng(37.7744866279, -122.398509405),
+new google.maps.LatLng(37.774748472, -122.398623999),
+new google.maps.LatLng(37.7746728633, -122.398979),
+new google.maps.LatLng(37.7745106833, -122.398929809),
+]
+var image = 'images/bluemarker.png';
 var sfoffice = new google.maps.LatLng(37.7747, -122.398314);
 function initialize() {
   var styles = [
@@ -76,25 +82,56 @@ function initialize() {
   map.mapTypes.set('map_style', styledMap);
   map.setMapTypeId('map_style');
 }
-//count the number 
+// The index of the 
 var count;
-function animation() {
+
+// Show the history nodes on one map.
+function trailanimation(data) {
+  clearMarkers();
   count = 0;
-  for (var i = 0; i < nodes.length; i++) {
+  for (var i = 0; i < data.length; i++) {
     window.setTimeout(function() {
-      addMarker(nodes[count]);
+      addMarker(data[count]);
       count += 1;
     }, i * 1000);
   }
 }
-//marker1.setMap(map);
+
+// Show the current nodes on the map.
+function motionanimation(data) {
+  clearMarkers();
+  addMarker(sfoffice);
+  count = 0;
+  for (var i = 0; i < data.length; i++) {
+    window.setTimeout(function() {
+      markers[0].setPosition(data[count]);
+      count += 1;
+    }, i * 1000);
+  }
+}
+//Stop the animation.
+function stopanimation(){
+    clearMarkers();
+}
+// Set the map to all markers.
+function setAllMap(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Clear the list of markers.
+function clearMarkers() {
+  setAllMap(null);
+  markers = [];
+}
 
 // Add a marker to the map and push to the array.
 function addMarker(location) {
   var marker = new google.maps.Marker({
     position: location,
     map: map,
-    animation: google.maps.Animation.DROP,
+
   });
   markers.push(marker);
 }
@@ -109,7 +146,9 @@ var marker1 = new google.maps.Marker({
   </head>
   <body>
     <div id="panel">
-      <button onclick="animation()">Animation</button>
+      <button onclick="trailanimation(nodes)">Trail Animation</button>
+      <button onclick="motionanimation(nodes1)">Motion Animation</button>
+      <button onclick="stopanimation()">Stop Animation</button>
     </div>
     <div id="map-canvas"></div>
     <p>Click on the map to add markers.</p>

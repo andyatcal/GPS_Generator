@@ -155,6 +155,9 @@ class Simulator():
     def result(self):
         return self.data
 
+    def writeToJson(self):
+        pass
+
 # Tests of SimSingleMoveRandomly()
 sim1 = Simulator()
 sim1.SimSingleMoveRandomly()
