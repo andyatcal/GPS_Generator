@@ -90,10 +90,8 @@ class Worker():
         """
         This function returns the ID and location of worker as a list.
         >>> worker1 = Worker(1, GPS(-122.398314, 37.7747))
-        >>> worker1.info()
-        [1, 37.7747, -122.398314]
         """
-        return [self.workerID, self.gps.latitude, self.gps.longitude]
+        return {"workerID":self.workerID, "lat":self.gps.latitude, "lng":self.gps.longitude}
 
 
 # Simulator for the motion of worker, generate a list in the form of 
@@ -118,7 +116,9 @@ class Simulator():
             position += worker.velocity * (timeIncrement.total_seconds())
             lon, lat = self.mapConvert(position[0], position[1], inverse = True)
             worker.setGPS(lon, lat)
-            newEntry = worker.info() + [self.time] + [1] # Geofence hardcoded as 1
+            newEntry = worker.info() # Geofence hardcoded as 1
+            newEntry["time"] = str(self.time)
+            newEntry["geoFenceID"] = 1
             self.data.append(newEntry)
         self.time += timeIncrement
 
@@ -156,14 +156,16 @@ class Simulator():
         return self.data
 
     def writeToJson(self):
-        pass
+        with open('data.json', 'w') as outfile:
+            json.dump(self.result, outfile)
 
 # Tests of SimSingleMoveRandomly()
 sim1 = Simulator()
 sim1.SimSingleMoveRandomly()
-result = sim1.result()
-for entry in result:
-    print("new google.maps.LatLng(" + str(entry[1])+", "+str(entry[2])+"),")
+print(sim1.result())
+# sim1.writeToJson()
+#for entry in result:
+#    print("new google.maps.LatLng(" + str(entry[1])+", "+str(entry[2])+"),")
 
 # Tests of SimMultipleMoveRandomly()
 # Three workers around SF office for 8 hrs.
