@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Motion Animation</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      #panel {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        margin-left: -180px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+      }
+    </style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+    <script>
+
+var map;
+var markers = [];
+var json_string = "";
+var gpsdata;
+var nodes = [];
+function checkfile(evt){
+  var files = document.getElementById('files').files;
+  if (!files.length) {
+    alert("Please give an input JSON file!");
+  } else {
+    var reader = new FileReader();
+    // If we use onloadend, we need to check the readyState.
+    reader.onloadend = function(evt) {
+      if (evt.target.readyState == FileReader.DONE) {
+        json_string = evt.target.result;
+        gpsdata = JSON.parse(json_string);
+        nodes =[];
+        for(i = 0; i < gpsdata.length; i += 1) {
+          nodes.push(new google.maps.LatLng(gpsdata[i]["lat"], gpsdata[i]["lng"]));
+        }
+      }
+    };
+    var file = files[0];
+    reader.readAsBinaryString(file);
+    return;
+  }
+}
+
+// nodes1 and nodes2 are hard coded, will be removed
+/*
+var nodes2= [
+new google.maps.LatLng(37.7750446685, -122.397897039),
+new google.maps.LatLng(37.7753893355, -122.397480075),
+new google.maps.LatLng(37.775734001, -122.397063106),
+new google.maps.LatLng(37.776078665, -122.396646134),
+]
+var nodes1 = [
+new google.maps.LatLng(37.7744866279, -122.398509405),
+new google.maps.LatLng(37.774748472, -122.398623999),
+new google.maps.LatLng(37.7746728633, -122.398979),
+new google.maps.LatLng(37.7745106833, -122.398929809),
+]
+*/
+var image = 'images/bluemarker.png';
+var sfoffice = new google.maps.LatLng(37.7747, -122.398314);
+function initialize() {
+  var styles = [
+    {
+      stylers: [
+        { hue: "#00ffe6" },
+        { saturation: -20 }
+      ]
+    },{
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [
+        { lightness: 100 },
+        { visibility: "simplified" }
+      ]
+    },{
+      featureType: "road",
+      elementType: "labels",
+      stylers: [
+        { visibility: "off" }
+      ]
+    }
+  ];
+  var styledMap = new google.maps.StyledMapType(styles,
+    {name: "Styled Map"});
+  var mapOptions = {
+    zoom: 15,
+    center: sfoffice,
+    mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+    },
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+  map.mapTypes.set('map_style', styledMap);
+  map.setMapTypeId('map_style');
+  // This is adding eventLister to the file loader.
+  document.getElementById('files').addEventListener('change', checkfile, false);
+}
+// The index of the 
+var count;
+
+/* Not used currently
+// Show the history nodes on one map.
+function trailanimation(data) {
+  clearMarkers();
+  count = 0;
+  for (var i = 0; i < data.length; i++) {
+    window.setTimeout(function() {
+      addMarker(data[count]);
+      count += 1;
+    }, i * 1000);
+  }
+}
+*/
+// Show the current nodes on the map.
+function motionanimation(data) {
+  clearMarkers();
+  if(data.length < 1) {
+    alert("No gpsdata got from JSON.");
+    return;
+  }
+  addMarker(data[0]);
+  count = 0;
+  for (var i = 0; i < data.length; i++) {
+    window.setTimeout(function() {
+      if (markers.length > 0) {
+      markers[0].setPosition(data[count]);
+      count += 1;
+      }
+    }, i * 1000);
+  }
+}
+//Stop the animation.
+function stopanimation(){
+    clearMarkers();
+}
+// Set the map to all markers.
+function setAllMap(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Clear the list of markers.
+function clearMarkers() {
+  setAllMap(null);
+  markers = [];
+}
+
+// Add a marker to the map and push to the array.
+function addMarker(location) {
+  var marker = new google.maps.Marker({
+    position: location,
+    map: map,
+    icon: image
+  });
+  markers.push(marker);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+/*
+var marker1 = new google.maps.Marker({
+    position: sfoffice,
+    map: map,
+  });
+*/
+  </script>
+  </head>
+  <body>
+    <div id="panel">
+      <input type="file" id="files" name="files[]" single />
+      <button onclick="motionanimation(nodes)">Motion Animation</button>
+      <button onclick="stopanimation()">Stop Animation</button>
+    </div>
+    <div id="map-canvas"></div>
+    <p>Click on the map to add markers.</p>
+  </body>
+</html>
