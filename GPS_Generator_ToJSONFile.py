@@ -132,7 +132,7 @@ class Simulator():
         # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
         worker1 = Worker(1, GPS(-122.398314, 37.7747))
         self.workerLists += [worker1]
-        for i in range(0, 100): # Within 1000 seconds
+        for i in range(0, 4): # Within 1000 seconds
             for worker in self.workerLists:
                 worker.velocity = np.array((random.uniform(-2.5, 2.5),\
                  random.uniform(-2.5, 2.5)))
@@ -156,14 +156,14 @@ class Simulator():
         return self.data
 
     def writeToJson(self):
-        with open('data.json', 'w') as outfile:
-            json.dump(self.result, outfile)
+        with open('test.json', 'w') as outfile:
+            json.dump(self.result(), outfile)
 
 # Tests of SimSingleMoveRandomly()
 sim1 = Simulator()
 sim1.SimSingleMoveRandomly()
-print(sim1.result())
-# sim1.writeToJson()
+# print(sim1.result())
+sim1.writeToJson()
 #for entry in result:
 #    print("new google.maps.LatLng(" + str(entry[1])+", "+str(entry[2])+"),")
 

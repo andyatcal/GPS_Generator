@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Markers</title>
+    <title>Maps Animation</title>
     <style>
       html, body, #map-canvas {
         height: 100%;
@@ -19,29 +19,46 @@
         border: 1px solid #999;
       }
     </style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-    <script type="text/javascript" src="simulation.json"></script>
+    <script type="text/javascript" src="data.json"></script>
     <script>
-function load() {
-  var mydata = JSON.parse(result);
-  alert(mydata[0].workerID);
-  alert(mydata[0].lat);
-};
+
 var map;
 var markers = [];
-var nodes =[];
-load();
-var nodes2 = [
+var json_string = "";
+var gpsdata;
+var nodes = [];
+function checkfile(){
+  var files = document.getElementById('files').files;
+  if (!files.length) {
+    alert("Please give an input JSON file!");
+  } else {
+    var reader = new FileReader();
+    // If we use onloadend, we need to check the readyState.
+    reader.onloadend = function(evt) {
+      if (evt.target.readyState == FileReader.DONE) {
+        json_string = evt.target.result;
+        gpsdata = JSON.parse(json_string);
+        alert(gpsdata.length);
+        for(i = 0; i < gpsdata.length; i += 1) {
+          nodes.push("new google.maps.LatLng(" + gpsdata[i]["lat"] +", " + gpsdata[i]["long"]+")")
+        }
+      }
+    };
+    var file = files[0];
+    reader.readAsBinaryString(file);
+    return;
+  }
+}
+// nodes1 and nodes2 are hard coded, will be removed
+/*
+var nodes2= [
 new google.maps.LatLng(37.7750446685, -122.397897039),
 new google.maps.LatLng(37.7753893355, -122.397480075),
 new google.maps.LatLng(37.775734001, -122.397063106),
 new google.maps.LatLng(37.776078665, -122.396646134),
-new google.maps.LatLng(37.7764233275, -122.396229158),
-new google.maps.LatLng(37.7767679885, -122.395812178),
-new google.maps.LatLng(37.777112648, -122.395395194),
-new google.maps.LatLng(37.777457306, -122.394978206),
-new google.maps.LatLng(37.7778019626, -122.394561214),
-new google.maps.LatLng(37.7781466176, -122.394144219),
 ]
 var nodes1 = [
 new google.maps.LatLng(37.7744866279, -122.398509405),
@@ -49,6 +66,7 @@ new google.maps.LatLng(37.774748472, -122.398623999),
 new google.maps.LatLng(37.7746728633, -122.398979),
 new google.maps.LatLng(37.7745106833, -122.398929809),
 ]
+*/
 var image = 'images/bluemarker.png';
 var sfoffice = new google.maps.LatLng(37.7747, -122.398314);
 function initialize() {
@@ -151,8 +169,9 @@ var marker1 = new google.maps.Marker({
   </head>
   <body>
     <div id="panel">
-      <button onclick="trailanimation(nodes)">Trail Animation</button>
-      <button onclick="motionanimation(nodes1)">Motion Animation</button>
+      <input type="file" id="files" name="files[]" single />
+      <button onclick="checkfile()">Check File</button>
+      <button onclick="motionanimation(nodes)">Motion Animation</button>
       <button onclick="stopanimation()">Stop Animation</button>
     </div>
     <div id="map-canvas"></div>
