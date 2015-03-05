@@ -122,26 +122,26 @@ class Simulator():
             self.data.append(newEntry)
         self.time += timeIncrement
 
-    def SimSingleMoveRandomly(self):
+    def SimSingleMoveRandomly(self, delta):
         """
         Simulate one worker walking around with random velocity. Magnitude range from
         0 - 2.5 m/s. 
         """
         # Can simulate mutiple worker walking around. 
-        timeIncrement = timedelta(seconds = 15) 
+        timeIncrement = timedelta(seconds = delta) 
         # Hard coding timeIncrement for 1 second, but can be smaller transmission. 
         worker = Worker(1, GPS(-122.398314, 37.7747))
         self.workerLists += [worker]
-        for i in range(0, 100): # Within 1000 seconds
+        for i in range(0, 10000): # Within 1000 seconds
             self.update(timeIncrement)
 
-    def SimMultipleMoveRandomly(self, numWorker = 1):
+    def SimMultipleMoveRandomly(self, delta, numWorker = 1):
         """
         Simulate NUMWORKER workers walking around with random velocity. Magnitude range from
         0 - 2.5 m/s. 
         """
         # Can simulate mutiple worker walking around. 
-        timeIncrement = timedelta(seconds = 15) 
+        timeIncrement = timedelta(seconds = delta) 
         # Hard coding timeIncrement for 1 second, but can be smaller transmission.
         for i in range(1, numWorker + 1):
             worker = Worker(i + 4, GPS(-122.398314, 37.7747)) # Worker ID starting from 5.
@@ -158,7 +158,7 @@ class Simulator():
 
 # Tests of SimSingleMoveRandomly()
 sim1 = Simulator()
-sim1.SimSingleMoveRandomly()
+sim1.SimSingleMoveRandomly(15)
 # print(sim1.result())
 sim1.writeToJson()
 #for entry in result:
