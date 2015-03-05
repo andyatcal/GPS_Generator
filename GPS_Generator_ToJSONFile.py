@@ -153,7 +153,7 @@ class Simulator():
         return self.data
 
     def writeToJson(self):
-        with open('test.json', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(self.result(), outfile)
 
 # Tests of SimSingleMoveRandomly()
