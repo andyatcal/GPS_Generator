@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Maps Animation</title>
+    <title>Motion Animation</title>
     <style>
       html, body, #map-canvas {
         height: 100%;
@@ -41,9 +41,9 @@ function checkfile(){
       if (evt.target.readyState == FileReader.DONE) {
         json_string = evt.target.result;
         gpsdata = JSON.parse(json_string);
-        alert(gpsdata.length);
+        nodes =[];
         for(i = 0; i < gpsdata.length; i += 1) {
-          nodes.push("new google.maps.LatLng(" + gpsdata[i]["lat"] +", " + gpsdata[i]["long"]+")")
+          nodes.push(new google.maps.LatLng(gpsdata[i]["lat"], gpsdata[i]["lng"]));
         }
       }
     };
@@ -94,7 +94,7 @@ function initialize() {
   var styledMap = new google.maps.StyledMapType(styles,
     {name: "Styled Map"});
   var mapOptions = {
-    zoom: 18,
+    zoom: 15,
     center: sfoffice,
     mapTypeControlOptions: {
       mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
@@ -122,8 +122,9 @@ function trailanimation(data) {
 
 // Show the current nodes on the map.
 function motionanimation(data) {
+  alert(nodes.length);
   clearMarkers();
-  addMarker(sfoffice);
+  addMarker(nodes[0]);
   count = 0;
   for (var i = 0; i < data.length; i++) {
     window.setTimeout(function() {
@@ -154,7 +155,7 @@ function addMarker(location) {
   var marker = new google.maps.Marker({
     position: location,
     map: map,
-
+    icon: image
   });
   markers.push(marker);
 }
