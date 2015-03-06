@@ -135,7 +135,6 @@ function motionanimation(data) {
     return;
   }
   addMarker(data[0]);
-  alert(markers.length);
   count = 0;
   timeouts = [];
   for (var i = 0; i < data.length; i++) {
@@ -147,7 +146,6 @@ function motionanimation(data) {
     }, i * 1000);
     timeouts.push(stimeout);
   }
-  alert(timeouts.length);
 }
 //Stop the animation.
 function stopanimation(){
