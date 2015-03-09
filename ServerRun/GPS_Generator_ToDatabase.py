@@ -133,10 +133,7 @@ class Simulator():
         worker1 = Worker(1, GPS(-122.398314, 37.7747))
         self.workerLists += [worker1]
         for i in range(0, 1000): # Within 1000 seconds
-            for worker in self.workerLists:
-                worker.velocity = np.array((random.uniform(-2.5, 2.5),\
-                 random.uniform(-2.5, 2.5)))
-                self.update(timeIncrement)
+            self.update(timeIncrement)
 
     def SimMultipleMoveRandomly(self, numWorker = 1):
         """
@@ -174,11 +171,17 @@ user = "rhumbix_foreman_app_user"
 pw = "" # < you should have this from the postit
 table = "Temp_UserLocation"
 
+sim = Simulator()
+sim.SimMultipleMoveRandomly(3)
+result = sim.result()
+insertNum = len(result)
+# print(insertNum) show the total number of entries to insert
 conn = pymssql.connect(server, user, pw, db)
+
 c1 = conn.cursor()
-
-c1.execute("SELECT * FROM Temp_UserLocation")
-
+# Delete the previous simulation
+c1.execute("DELETE FROM Temp_UserLocation WHERE USERID > 4")
+# count how many entries we have inserted.
 count = 1.0
 for entry in result:
     percent = count / insertNum

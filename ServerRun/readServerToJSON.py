@@ -15,7 +15,7 @@ table = "Temp_UserLocation"
 conn = pymssql.connect(server, user, pw, db)
 c1 = conn.cursor()
 
-c1.execute("SELECT * FROM Temp_UserLocation WHERE USERID = 6;")
+c1.execute("SELECT * FROM Temp_UserLocation WHERE USERID = ;")
 data = c1.fetchall()
 result = []
 
@@ -25,3 +25,5 @@ for i in range(0, len(data)):
 
 with open('data6.json', 'w') as outfile:
     json.dump(result, outfile)
+
+conn.close()
