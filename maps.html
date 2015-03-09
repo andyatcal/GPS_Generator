@@ -29,6 +29,10 @@ var markers = [];
 var json_string = "";
 var gpsdata;
 var nodes = [];
+// stimeout and timeouts are for animations. stimeout set a single animation point.
+// timeouts is the collection of the animation points.
+var stimeout;
+var timeouts = [];
 function checkfile(evt){
   var files = document.getElementById('files').files;
   if (!files.length) {
@@ -132,18 +136,23 @@ function motionanimation(data) {
   }
   addMarker(data[0]);
   count = 0;
+  timeouts = [];
   for (var i = 0; i < data.length; i++) {
-    window.setTimeout(function() {
+     stimeout = window.setTimeout(function() {
       if (markers.length > 0) {
-      markers[0].setPosition(data[count]);
-      count += 1;
+        markers[0].setPosition(data[count]);
+        count += 1;
       }
     }, i * 1000);
+    timeouts.push(stimeout);
   }
 }
 //Stop the animation.
 function stopanimation(){
-    clearMarkers();
+  clearMarkers();
+  for (var i = 0; i < timeouts.length; i++) {
+    clearTimeout(timeouts[i]);
+  }
 }
 // Set the map to all markers.
 function setAllMap(map) {

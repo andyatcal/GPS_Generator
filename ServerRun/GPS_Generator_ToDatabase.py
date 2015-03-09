@@ -174,17 +174,11 @@ user = "rhumbix_foreman_app_user"
 pw = "" # < you should have this from the postit
 table = "Temp_UserLocation"
 
-sim = Simulator()
-sim.SimMultipleMoveRandomly(3)
-result = sim.result()
-insertNum = len(result)
-# print(insertNum) show the total number of entries to insert
 conn = pymssql.connect(server, user, pw, db)
-
 c1 = conn.cursor()
-# Delete the previous simulation
-c1.execute("DELETE FROM Temp_UserLocation WHERE USERID > 4")
-# count how many entries we have inserted.
+
+c1.execute("SELECT * FROM Temp_UserLocation")
+
 count = 1.0
 for entry in result:
     percent = count / insertNum
